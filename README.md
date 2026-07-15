@@ -16,23 +16,6 @@ A Django-based web platform with ML capabilities that analyzes server and networ
 - Python 3.12+
 - `uv` package manager
 
-## Quick Start (Single Command)
-
-We've provided a comprehensive Python script that automates the entire setup, pushes the code to a new GitHub repository, and starts the development server.
-
-If you have the [GitHub CLI (`gh`)](https://cli.github.com/) installed and authenticated, simply run:
-
-```bash
-python launch.py
-```
-
-This single command will:
-1. Sync all dependencies using `uv`.
-2. Run Django database migrations.
-3. Ingest all sample logs into the ML pipeline and populate the database.
-4. Initialize a git repository and create a new **public GitHub repository** (`CyberLog-Analyzer`).
-5. Start the local server at `http://localhost:8000`.
-
 ### Manual Setup
 
 If you prefer to run things step-by-step:
