@@ -16,6 +16,31 @@ A Django-based web platform with ML capabilities that analyzes server and networ
 - Python 3.12+
 - `uv` package manager
 
+## Quick Start (Single Command)
+
+We've provided one-click startup scripts so anyone can run this project instantly without manual setup.
+
+**For Windows Users**:
+Double-click `run.bat` or run:
+```cmd
+run.bat
+```
+
+**For Mac/Linux Users**:
+Make the script executable and run:
+```bash
+chmod +x run.sh
+./run.sh
+```
+
+These scripts will automatically:
+1. Sync all dependencies.
+2. Run database migrations.
+3. Ingest sample logs into the ML pipeline and populate the database.
+4. Start the local server at `http://localhost:8000`.
+
+*(Demo Credentials - Username: `demo` | Password: `demo1234`)*
+
 ### Manual Setup
 
 If you prefer to run things step-by-step:
