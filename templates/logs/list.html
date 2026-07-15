@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}Log Explorer | CyberLog{% endblock %}
+{% block page_title %}Log Explorer{% endblock %}
+
+{% block content %}
+<div class="mb-6 flex gap-4">
+    <form method="get" class="flex-1 flex gap-4">
+        <input type="text" name="q" value="{{ query|default:'' }}" placeholder="Search IP, description..." class="flex-1 bg-slate-800 border border-slate-700 rounded-lg px-4 py-2">
+        <button type="submit" class="bg-slate-700 px-6 py-2 rounded-lg">Search</button>
+    </form>
+</div>
+<div class="bg-slate-800/70 rounded-xl border border-slate-700/50 overflow-hidden">
+    <table class="w-full text-left text-sm">
+        <thead class="bg-slate-900/50 text-slate-400">
+            <tr>
+                <th class="p-4">Time</th>
+                <th class="p-4">IP</th>
+                <th class="p-4">Action</th>
+                <th class="p-4">Severity</th>
+                <th class="p-4">Desc</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entry in entries %}
+            <tr class="border-t border-slate-700/50 hover:bg-slate-700/30">
+                <td class="p-4 whitespace-nowrap">{{ entry.timestamp|date:"Y-m-d H:i:s" }}</td>
+                <td class="p-4 font-mono">{{ entry.source_ip|default:"-" }}</td>
+                <td class="p-4">{{ entry.action }}</td>
+                <td class="p-4"><span class="px-2 py-1 rounded text-xs bg-{{ entry.severity_color }}-500/20 text-{{ entry.severity_color }}-400">{{ entry.severity }}</span></td>
+                <td class="p-4 truncate max-w-xs">{{ entry.description }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5" class="p-4 text-center text-slate-400">No logs found.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% include 'components/pagination.html' %}
+{% endblock %}

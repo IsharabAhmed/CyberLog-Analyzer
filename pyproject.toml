@@ -1,0 +1,33 @@
+[project]
+name = "cyberlog-analyzer"
+version = "1.0.0"
+description = "Cybersecurity Log Analysis Platform with ML-powered threat detection"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "django>=5.1,<6.0",
+    "psycopg2-binary>=2.9",
+    "scikit-learn>=1.5",
+    "pandas>=2.2",
+    "plotly>=5.24",
+    "reportlab>=4.2",
+    "gunicorn>=23.0",
+    "whitenoise>=6.7",
+    "django-widget-tweaks>=1.5",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.3",
+    "pytest-django>=4.9",
+    "coverage>=7.6",
+    "ruff>=0.7",
+]
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "config.settings.development"
+pythonpath = ["."]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - CyberLog</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        slate: { 950: '#030712', 900: '#080e1a', 800: '#0d1526', 700: '#1a2744', 600: '#2d4373', 400: '#8ba1d1', 100: '#eef2ff' },
+                        emerald: { 400: '#5cfffa', 500: '#00f0ff', 600: '#00c3d0' },
+                        amber: { 400: '#ffd043', 500: '#ffb000', 600: '#cc8d00' },
+                        red: { 400: '#ff4d79', 500: '#ff003c', 600: '#cc0030' },
+                    },
+                    fontFamily: {
+                        sans: ['Outfit', 'Inter', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <style>
+        .cyber-bg {
+            background-color: #030712;
+            background-image: linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+            background-size: 30px 30px;
+        }
+        .cyber-glow { text-shadow: 0 0 10px rgba(0, 240, 255, 0.7); }
+        .cyber-border { box-shadow: inset 0 0 20px rgba(0, 240, 255, 0.05); }
+    </style>
+</head>
+<body class="cyber-bg text-slate-100 font-sans min-h-screen flex items-center justify-center relative">
+    <div class="absolute inset-0 bg-gradient-to-br from-emerald-500/5 via-transparent to-red-500/5 pointer-events-none"></div>
+    
+    <div class="w-full max-w-md p-8 bg-slate-900/60 backdrop-blur-xl border border-emerald-500/30 rounded-2xl shadow-[0_0_30px_rgba(0,240,255,0.15)] cyber-border relative z-10">
+        <div class="flex justify-center mb-8 items-center gap-3">
+            <svg class="w-10 h-10 text-emerald-500 drop-shadow-[0_0_8px_rgba(0,240,255,0.8)]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
+            <h1 class="text-3xl font-bold text-emerald-500 tracking-widest cyber-glow uppercase">CyberLog</h1>
+        </div>
+        
+        <h2 class="text-xl font-mono text-slate-300 uppercase tracking-widest mb-6 text-center border-b border-slate-700/50 pb-4">System Access</h2>
+        
+        <form method="post" class="space-y-5">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="space-y-1">
+                    <label class="text-xs font-mono text-emerald-400 uppercase tracking-wider">{{ field.label }}</label>
+                    <div class="mt-1">
+                        {{ field }}
+                    </div>
+                    {% if field.errors %}
+                        <p class="text-red-500 text-xs font-mono mt-1">{{ field.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <button type="submit" class="w-full py-3 mt-4 bg-emerald-500/10 border border-emerald-500 text-emerald-400 hover:bg-emerald-500 hover:text-slate-900 hover:shadow-[0_0_15px_rgba(0,240,255,0.6)] rounded-lg font-mono font-bold tracking-widest uppercase transition-all duration-300">Initialize Session</button>
+        </form>
+        
+        <p class="mt-8 text-center text-xs font-mono text-slate-500 uppercase tracking-wider">Unregistered operator? <a href="{% url 'accounts:register' %}" class="text-emerald-500 hover:text-emerald-400 hover:underline ml-1">Request Access</a></p>
+    </div>
+    
+    <!-- Decorative corner accents -->
+    <div class="absolute top-0 left-0 w-32 h-32 border-t-2 border-l-2 border-emerald-500/20 m-8 pointer-events-none"></div>
+    <div class="absolute bottom-0 right-0 w-32 h-32 border-b-2 border-r-2 border-emerald-500/20 m-8 pointer-events-none"></div>
+</body>
+</html>

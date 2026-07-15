@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Dashboard | CyberLog{% endblock %}
+{% block page_title %}Security Dashboard{% endblock %}
+
+{% block content %}
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8 relative z-10">
+    <div class="bg-slate-900/60 backdrop-blur-md rounded-xl p-6 border border-emerald-500/30 shadow-[0_0_15px_rgba(0,240,255,0.1)] cyber-border hover:shadow-[0_0_20px_rgba(0,240,255,0.2)] transition-all">
+        <h3 class="text-slate-400 text-xs font-mono uppercase tracking-widest mb-2">Total Events</h3>
+        <p class="text-3xl font-bold font-mono">{{ total_events }}</p>
+    </div>
+    <div class="bg-slate-900/60 backdrop-blur-md rounded-xl p-6 border border-emerald-500 shadow-[0_0_20px_rgba(0,240,255,0.3)] cyber-border relative overflow-hidden group">
+        <div class="absolute inset-0 bg-emerald-500/5 group-hover:bg-emerald-500/10 transition-colors"></div>
+        <h3 class="text-emerald-400 text-xs font-mono uppercase tracking-widest mb-2 cyber-glow relative z-10">Active Alerts</h3>
+        <p class="text-3xl font-bold text-emerald-500 font-mono relative z-10">{{ total_alerts }}</p>
+    </div>
+    <div class="bg-slate-900/60 backdrop-blur-md rounded-xl p-6 border border-emerald-500/30 shadow-[0_0_15px_rgba(0,240,255,0.1)] cyber-border hover:shadow-[0_0_20px_rgba(0,240,255,0.2)] transition-all">
+        <h3 class="text-slate-400 text-xs font-mono uppercase tracking-widest mb-2">Files Analyzed</h3>
+        <p class="text-3xl font-bold font-mono">{{ total_files }}</p>
+    </div>
+    <div class="bg-slate-900/60 backdrop-blur-md rounded-xl p-6 border border-red-500 shadow-[0_0_20px_rgba(255,0,60,0.3)] relative overflow-hidden group">
+        <div class="absolute inset-0 bg-red-500/5 group-hover:bg-red-500/10 transition-colors"></div>
+        <h3 class="text-red-400 text-xs font-mono uppercase tracking-widest mb-2 cyber-glow-red relative z-10">Critical Alerts</h3>
+        <p class="text-3xl font-bold text-red-500 font-mono relative z-10">{{ critical_alerts }}</p>
+        {% if critical_alerts > 0 %}
+            <div class="absolute top-0 right-0 w-24 h-24 bg-red-500/20 rounded-bl-full animate-pulse blur-xl"></div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+    <div class="lg:col-span-2 bg-slate-900/60 backdrop-blur-md rounded-xl p-6 border border-slate-700/50 shadow-[0_0_15px_rgba(0,0,0,0.5)]">
+        <h3 class="text-lg font-semibold mb-4 text-slate-200">Threat Timeline</h3>
+        <div id="threat-timeline-chart" class="w-full h-[400px]"></div>
+    </div>
+    <div class="bg-slate-900/60 backdrop-blur-md rounded-xl p-6 border border-slate-700/50 shadow-[0_0_15px_rgba(0,0,0,0.5)]">
+        <h3 class="text-lg font-semibold mb-4 text-slate-200">Severity Distribution</h3>
+        <div class="relative h-[300px] w-full flex items-center justify-center">
+            <canvas id="severity-chart"></canvas>
+        </div>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
+    <div class="bg-slate-900/60 backdrop-blur-md rounded-xl p-6 border border-slate-700/50 shadow-[0_0_15px_rgba(0,0,0,0.5)]">
+        <h3 class="text-lg font-semibold mb-4 text-slate-200">Top Attacking IPs</h3>
+        <canvas id="attackers-chart" height="300"></canvas>
+    </div>
+    <div class="bg-slate-900/60 backdrop-blur-md rounded-xl p-6 border border-slate-700/50 shadow-[0_0_15px_rgba(0,0,0,0.5)]">
+        <h3 class="text-lg font-semibold mb-4 text-slate-200">Attack Origins</h3>
+        <div id="geo-map" class="w-full h-[350px]"></div>
+    </div>
+</div>
+
+<div class="bg-slate-900/60 backdrop-blur-md rounded-xl p-6 border border-slate-700/50 shadow-[0_0_15px_rgba(0,0,0,0.5)]">
+    <div class="flex justify-between items-center mb-6">
+        <h3 class="text-lg font-semibold text-slate-200">Recent Alerts</h3>
+        <a href="{% url 'analytics:alerts' %}" class="text-emerald-400 hover:text-emerald-300 text-sm font-medium tracking-wide">View All &rarr;</a>
+    </div>
+    <div class="space-y-4">
+        {% for alert in recent_alerts %}
+            <div class="flex items-center gap-4 p-4 rounded-lg bg-slate-950/50 border border-slate-700/30 hover:border-emerald-500/30 transition-colors group">
+                <div class="w-2 h-2 rounded-full bg-{{ alert.severity_color }}-500 shadow-[0_0_8px_currentColor]"></div>
+                <div class="flex-1">
+                    <h4 class="font-medium text-slate-200 group-hover:text-emerald-400 transition-colors">{{ alert.title }}</h4>
+                    <p class="text-sm text-slate-400 font-mono mt-1">{{ alert.source_ip|default:"N/A" }} <span class="mx-2 opacity-50">&bull;</span> {{ alert.created_at|timesince }} ago</p>
+                </div>
+                <div>
+                    <span class="px-3 py-1 text-xs rounded-full bg-slate-800/80 border border-slate-700 font-mono text-slate-300">{{ alert.get_alert_type_display }}</span>
+                </div>
+            </div>
+        {% empty %}
+            <p class="text-slate-500 font-mono text-center py-8">No recent alerts found.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/charts.js' %}"></script>
+<script src="{% static 'js/dashboard.js' %}"></script>
+{% endblock %}
